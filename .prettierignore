@@ -1,0 +1,12 @@
+node_modules
+dist
+.output
+.nitro
+.tanstack
+.vinxi
+bun.lock
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+src/paraglide
+src/routeTree.gen.ts
