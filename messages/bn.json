@@ -207,5 +207,18 @@
   "ref_leg_src": "বুখারী ৬৪৭৪",
   "ref_knee_src": "মুসলিম ৮",
   "ref_shin_src": "কুরআন ৬৮:৪২",
-  "ref_foot_src": "বুখারী ৮১২"
+  "ref_foot_src": "বুখারী ৮১২",
+  "cat_all": "সব",
+  "cat_vocab": "শব্দভাণ্ডার",
+  "cat_gender": "লিঙ্গ",
+  "cat_grammar": "ব্যাকরণ",
+  "cat_pronun": "উচ্চারণ",
+  "cat_rules": "নিয়মাবলী",
+  "score_progress": "{total}-এর মধ্যে {done}টি",
+  "change_language": "ভাষা পরিবর্তন",
+  "settings": "সেটিংস",
+  "option_a": "ক",
+  "option_b": "খ",
+  "option_c": "গ",
+  "option_d": "ঘ"
 }

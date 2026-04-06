@@ -10,7 +10,24 @@ export const CATS: Category[] = [
   "Rules",
 ];
 
-export const OPTION_LABELS = ["A", "B", "C", "D"] as const;
+const CAT_MESSAGES: Record<Category, () => string> = {
+  All: m.cat_all,
+  Vocab: m.cat_vocab,
+  Gender: m.cat_gender,
+  Grammar: m.cat_grammar,
+  "Pronun.": m.cat_pronun,
+  Rules: m.cat_rules,
+};
+
+export function getCategoryLabel(cat: Category): string {
+  return CAT_MESSAGES[cat]();
+}
+
+const OPT_MESSAGES = [m.option_a, m.option_b, m.option_c, m.option_d] as const;
+
+export function getOptionLabel(index: number): string {
+  return OPT_MESSAGES[index]();
+}
 
 /** Light mode category accent colors */
 export const ACCENT_LIGHT: Record<Category, string> = {

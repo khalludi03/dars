@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 import type { ReactNode } from "react";
+import * as m from "#/paraglide/messages";
 
 interface CarouselProps<T> {
   items: T[];
@@ -101,7 +102,7 @@ export function Carousel<T>({ items, renderItem, accent }: CarouselProps<T>) {
           <button
             onClick={() => scrollTo(-1)}
             disabled={idx === 0}
-            aria-label="Previous"
+            aria-label={m.previous()}
             className="carousel-arrow absolute top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center active:scale-90 transition-all"
             style={{
               left: 6,
@@ -127,7 +128,7 @@ export function Carousel<T>({ items, renderItem, accent }: CarouselProps<T>) {
           <button
             onClick={() => scrollTo(1)}
             disabled={idx >= n - 1}
-            aria-label="Next"
+            aria-label={m.next()}
             className="carousel-arrow absolute top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center active:scale-90 transition-all"
             style={{
               right: 6,

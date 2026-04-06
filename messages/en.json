@@ -207,5 +207,18 @@
   "ref_leg_src": "Bukhari 6474",
   "ref_knee_src": "Muslim 8",
   "ref_shin_src": "Quran 68:42",
-  "ref_foot_src": "Bukhari 812"
+  "ref_foot_src": "Bukhari 812",
+  "cat_all": "All",
+  "cat_vocab": "Vocab",
+  "cat_gender": "Gender",
+  "cat_grammar": "Grammar",
+  "cat_pronun": "Pronunciation",
+  "cat_rules": "Rules",
+  "score_progress": "{done} of {total}",
+  "change_language": "Change language",
+  "settings": "Settings",
+  "option_a": "A",
+  "option_b": "B",
+  "option_c": "C",
+  "option_d": "D"
 }

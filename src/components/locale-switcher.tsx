@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { getLocale, setLocale, locales } from "#/paraglide/runtime";
+import * as m from "#/paraglide/messages";
 
 const LOCALE_LABELS: Record<string, string> = {
   bn: "বাংলা",
@@ -33,7 +34,7 @@ export function LocaleSwitcher() {
           borderRadius: 22,
           background: open ? "var(--fill)" : "transparent",
         }}
-        aria-label="Change language"
+        aria-label={m.change_language()}
       >
         <svg
           width="22"

@@ -1,5 +1,5 @@
 import type { UseQuizReturn } from "@/hooks/use-quiz";
-import { CATS } from "@/data/constants";
+import { CATS, getCategoryLabel } from "@/data/constants";
 import { Option } from "./option";
 import { Nav } from "./nav";
 import { Results } from "./results";
@@ -63,10 +63,12 @@ export function QuizView(props: QuizViewProps) {
             }}
           />
         </svg>
-        <div className="flex-1 flex items-baseline gap-1.5">
-          <span className="text-lg font-bold tabular-nums">{dn}</span>
-          <span className="text-xs font-medium" style={{ color: "var(--t3)" }}>
-            of {tot}
+        <div className="flex-1">
+          <span
+            className="text-sm font-semibold tabular-nums"
+            style={{ color: "var(--t2)" }}
+          >
+            {m.score_progress({ done: String(dn), total: String(tot) })}
           </span>
         </div>
         <div
@@ -111,7 +113,7 @@ export function QuizView(props: QuizViewProps) {
                 transition: "all .22s",
               }}
             >
-              {c}
+              {getCategoryLabel(c)}
               {st.full ? (
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                   <circle
@@ -176,7 +178,7 @@ export function QuizView(props: QuizViewProps) {
                 letterSpacing: ".04em",
               }}
             >
-              {cur.cat}
+              {getCategoryLabel(cur.cat)}
             </span>
             <span
               className="text-xs font-medium tabular-nums"

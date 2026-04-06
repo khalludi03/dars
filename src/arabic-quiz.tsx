@@ -133,7 +133,7 @@ export default function App() {
                         borderRadius: 22,
                         background: menu ? "var(--fill)" : "transparent",
                       }}
-                      aria-label="Settings"
+                      aria-label={m.settings()}
                     >
                       <GearIcon />
                     </button>
@@ -203,7 +203,7 @@ export default function App() {
                         borderRadius: 22,
                         background: menu ? "var(--fill)" : "transparent",
                       }}
-                      aria-label="Settings"
+                      aria-label={m.settings()}
                     >
                       <GearIcon />
                     </button>

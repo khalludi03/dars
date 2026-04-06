@@ -1,4 +1,4 @@
-import { OPTION_LABELS } from "@/data/constants";
+import { getOptionLabel } from "@/data/constants";
 
 interface OptionProps {
   opt: string;
@@ -72,7 +72,7 @@ export function Option({
           ? "✓"
           : locked && isSelected && !isAnswer
             ? "✗"
-            : OPTION_LABELS[index]}
+            : getOptionLabel(index)}
       </span>
       <span
         className="flex-1 text-base font-medium"
