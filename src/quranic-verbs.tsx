@@ -95,6 +95,41 @@ const SCOPED_CSS = `
   [data-qv] ::-webkit-scrollbar-track{background:transparent}
   [data-qv] ::-webkit-scrollbar-thumb{background:#d4c8b8;border-radius:3px}
   [data-qv] input::placeholder{color:#c4b8a8}
+  @media(max-width:480px){
+    [data-qv] .qv-card-row{flex-wrap:wrap;gap:8px !important;padding:12px 14px !important}
+    [data-qv] .qv-card-icon{width:42px !important;height:42px !important;font-size:18px !important;border-radius:10px !important}
+    [data-qv] .qv-card-verb{font-size:24px !important}
+    [data-qv] .qv-card-tr{font-size:13.5px !important}
+    [data-qv] .qv-card-meta{font-size:12px !important}
+    [data-qv] .qv-card-freq{font-size:20px !important}
+    [data-qv] .qv-card-practice{display:none !important}
+    [data-qv] .qv-card-chevron{width:24px !important;height:24px !important;font-size:14px !important}
+    [data-qv] .qv-header-title{font-size:34px !important}
+    [data-qv] .qv-header-desc{font-size:14.5px !important}
+    [data-qv] .qv-stat-num{font-size:20px !important}
+    [data-qv] .qv-stat-label{font-size:9.5px !important}
+    [data-qv] .qv-lang-btn{padding:4px 10px !important;font-size:13px !important}
+    [data-qv] .qv-form-ar{font-size:21px !important}
+    [data-qv] .qv-form-tr{font-size:11px !important}
+    [data-qv] .qv-form-mn{font-size:13px !important}
+    [data-qv] .qv-form-est{font-size:11px !important}
+    [data-qv] .qv-th{font-size:9px !important;padding:5px 6px !important}
+    [data-qv] .qv-td{padding:7px 6px !important}
+    [data-qv] .qv-type-badge{font-size:10px !important;padding:1px 5px !important}
+    [data-qv] .qv-type-sub{font-size:9px !important}
+    [data-qv] .qv-search{font-size:15px !important}
+  }
+  @media(max-width:360px){
+    [data-qv] .qv-form-ar{font-size:19px !important}
+    [data-qv] .qv-form-mn{white-space:normal !important;font-size:12px !important}
+    [data-qv] .qv-type-badge{font-size:9px !important;padding:1px 4px !important}
+    [data-qv] .qv-type-sub{display:none !important}
+    [data-qv] .qv-form-est{font-size:10px !important}
+    [data-qv] .qv-card-verb{font-size:22px !important}
+    [data-qv] .qv-card-freq{font-size:18px !important}
+    [data-qv] .qv-stat-num{font-size:17px !important}
+    [data-qv] .qv-header-title{font-size:30px !important}
+  }
 `;
 
 
@@ -1939,8 +1974,8 @@ const TypeBadge = ({ type }: { type: VerbType }) => {
   const { lang, t } = useLang();
   const colors = typeColors[type];
   return (
-    <span style={{ fontSize: 12.5, padding: "2px 8px", borderRadius: 99, fontWeight: 600, background: colors.bg, color: colors.border, border: `1px solid ${colors.border}22`, fontFamily: bodyFont(lang), whiteSpace: "nowrap", display: "inline-flex", alignItems: "center", gap: 3 }}>
-      {arabicTypeLabels[type]} <span style={{ opacity: 0.65, fontSize: 11 }}>({t.types[type]})</span>
+    <span className="qv-type-badge" style={{ fontSize: 12.5, padding: "2px 8px", borderRadius: 99, fontWeight: 600, background: colors.bg, color: colors.border, border: `1px solid ${colors.border}22`, fontFamily: bodyFont(lang), whiteSpace: "nowrap", display: "inline-flex", alignItems: "center", gap: 3 }}>
+      {arabicTypeLabels[type]} <span className="qv-type-sub" style={{ opacity: 0.65, fontSize: 11 }}>({t.types[type]})</span>
     </span>
   );
 };
@@ -1949,13 +1984,13 @@ const FormRow = ({ form, index, lang }: { form: VerbForm; index: number; lang: L
   const bg = index % 2 === 0 ? "#fdfbf7" : "#fff";
   return (
     <tr style={{ background: bg, animation: `fs 0.3s ease ${index * 0.02}s both` }}>
-      <td style={{ ...TD_STYLE, textAlign: "right", paddingLeft: 14, lineHeight: 1.2, whiteSpace: "nowrap" }}>
-        <div style={{ fontFamily: "'Amiri',serif", fontSize: 25, color: "#2c1810", fontWeight: 700 }}>{form.ar}</div>
-        <div style={{ fontFamily: "'Source Serif 4',Georgia,serif", color: "#a09080", fontSize: 12.5, fontStyle: "italic", marginTop: 1 }}>{form.tr}<AyahRef form={form} /></div>
+      <td className="qv-td" style={{ ...TD_STYLE, textAlign: "right", paddingLeft: 14, lineHeight: 1.2, whiteSpace: "nowrap" }}>
+        <div className="qv-form-ar" style={{ fontFamily: "'Amiri',serif", fontSize: 25, color: "#2c1810", fontWeight: 700 }}>{form.ar}</div>
+        <div className="qv-form-tr" style={{ fontFamily: "'Source Serif 4',Georgia,serif", color: "#a09080", fontSize: 12.5, fontStyle: "italic", marginTop: 1 }}>{form.tr}<AyahRef form={form} /></div>
       </td>
-      <td style={{ ...TD_STYLE, color: "#4a3728", fontSize: 15.5, fontFamily: bodyFont(lang), lineHeight: 1.4, whiteSpace: "nowrap" }}>{form.mn[lang]}</td>
-      <td style={{ ...TD_STYLE, whiteSpace: "nowrap" }}><TypeBadge type={form.ty} /></td>
-      <td style={{ ...TD_STYLE, textAlign: "right", paddingRight: 14, whiteSpace: "nowrap" }}><span style={{ fontSize: 13, fontWeight: 700, color: "#a67c52" }}>~{fmtNum(form.n, lang)}</span></td>
+      <td className="qv-td qv-form-mn" style={{ ...TD_STYLE, color: "#4a3728", fontSize: 15.5, fontFamily: bodyFont(lang), lineHeight: 1.4, whiteSpace: "nowrap" }}>{form.mn[lang]}</td>
+      <td className="qv-td" style={{ ...TD_STYLE, whiteSpace: "nowrap" }}><TypeBadge type={form.ty} /></td>
+      <td className="qv-td" style={{ ...TD_STYLE, textAlign: "right", paddingRight: 14, whiteSpace: "nowrap" }}><span className="qv-form-est" style={{ fontSize: 13, fontWeight: 700, color: "#a67c52" }}>~{fmtNum(form.n, lang)}</span></td>
     </tr>
   );
 };
@@ -1967,30 +2002,30 @@ const VerbCard = ({ verb, expanded, onToggle, onPractice }: { verb: Verb; expand
   };
   return (
     <div style={{ background: "#fff", borderRadius: 16, border: "1px solid #e8e0d4", overflow: "hidden", boxShadow: expanded ? "0 10px 36px rgba(44,24,16,0.08)" : "0 2px 10px rgba(44,24,16,0.03)", transition: "box-shadow 0.3s ease" }}>
-      <div role="button" tabIndex={0} aria-expanded={expanded} onClick={onToggle} onKeyDown={handleKeyDown} style={{ padding: "16px 18px", cursor: "pointer", display: "flex", alignItems: "center", gap: 12, background: `linear-gradient(135deg,${verb.color}1A,${verb.color}08)`, borderBottom: expanded ? "1px solid #e8e0d4" : "none", outline: "none" }}>
-        <div style={{ width: 52, height: 52, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", background: `linear-gradient(145deg,${verb.color}66,${verb.color}30)`, fontFamily: "'Amiri',serif", fontSize: 22.5, color: "#2c1810", fontWeight: 700, boxShadow: `0 3px 10px ${verb.color}2A`, flexShrink: 0 }}>{verb.verb.slice(0, 2)}</div>
+      <div className="qv-card-row" role="button" tabIndex={0} aria-expanded={expanded} onClick={onToggle} onKeyDown={handleKeyDown} style={{ padding: "16px 18px", cursor: "pointer", display: "flex", alignItems: "center", gap: 12, background: `linear-gradient(135deg,${verb.color}1A,${verb.color}08)`, borderBottom: expanded ? "1px solid #e8e0d4" : "none", outline: "none" }}>
+        <div className="qv-card-icon" style={{ width: 52, height: 52, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", background: `linear-gradient(145deg,${verb.color}66,${verb.color}30)`, fontFamily: "'Amiri',serif", fontSize: 22.5, color: "#2c1810", fontWeight: 700, boxShadow: `0 3px 10px ${verb.color}2A`, flexShrink: 0 }}>{verb.verb.slice(0, 2)}</div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "baseline", gap: 7, flexWrap: "wrap" }}>
-            <span style={{ fontFamily: "'Amiri',serif", fontSize: 29, color: "#2c1810", fontWeight: 700 }}>{verb.verb}</span>
-            <span style={{ fontFamily: "'Source Serif 4',Georgia,serif", fontSize: 15.5, color: "#8b7355", fontStyle: "italic" }}>{verb.tr}</span>
+            <span className="qv-card-verb" style={{ fontFamily: "'Amiri',serif", fontSize: 29, color: "#2c1810", fontWeight: 700 }}>{verb.verb}</span>
+            <span className="qv-card-tr" style={{ fontFamily: "'Source Serif 4',Georgia,serif", fontSize: 15.5, color: "#8b7355", fontStyle: "italic" }}>{verb.tr}</span>
           </div>
-          <div style={{ display: "flex", gap: 8, marginTop: 2, alignItems: "center", flexWrap: "wrap" }}>
-            <span style={{ fontSize: 15.5, color: "#5a4a3a", fontWeight: 500, fontFamily: bodyFont(lang) }}>{verb.mn[lang]}</span>
-            <span style={{ fontSize: 12.5, color: "#a67c52", whiteSpace: "nowrap" }}>{verb.root} · {t.form} {verb.form}</span>
+          <div className="qv-card-meta" style={{ display: "flex", gap: 8, marginTop: 2, alignItems: "center", flexWrap: "wrap" }}>
+            <span style={{ fontSize: "inherit", color: "#5a4a3a", fontWeight: 500, fontFamily: bodyFont(lang) }}>{verb.mn[lang]}</span>
+            <span style={{ fontSize: "inherit", color: "#a67c52", whiteSpace: "nowrap" }}>{verb.root} · {t.form} {verb.form}</span>
           </div>
         </div>
-        <button onClick={e => { e.stopPropagation(); onPractice(); }} aria-label={t.practiceLabel} style={{ padding: "6px 14px", borderRadius: 99, border: "1.5px solid #a67c52", background: "transparent", color: "#a67c52", fontWeight: 700, fontSize: 12, cursor: "pointer", transition: "all 0.2s ease", fontFamily: bodyFont(lang), flexShrink: 0, whiteSpace: "nowrap" }}
+        <button className="qv-card-practice" onClick={e => { e.stopPropagation(); onPractice(); }} aria-label={t.practiceLabel} style={{ padding: "6px 14px", borderRadius: 99, border: "1.5px solid #a67c52", background: "transparent", color: "#a67c52", fontWeight: 700, fontSize: 12, cursor: "pointer", transition: "all 0.2s ease", fontFamily: bodyFont(lang), flexShrink: 0, whiteSpace: "nowrap" }}
           onMouseEnter={e => { e.currentTarget.style.background = "#a67c52"; e.currentTarget.style.color = "#fff"; }}
           onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#a67c52"; }}
         >{t.practiceLabel}</button>
         <div style={{ textAlign: "right", flexShrink: 0 }}>
-          <div style={{ fontSize: 25, fontWeight: 800, color: "#a67c52" }}>{fmtNum(verb.freq, lang)}</div>
+          <div className="qv-card-freq" style={{ fontSize: 25, fontWeight: 800, color: "#a67c52" }}>{fmtNum(verb.freq, lang)}</div>
           <div style={{ fontSize: 10.5, color: "#8b7355", textTransform: "uppercase", letterSpacing: 1, fontFamily: bodyFont(lang) }}>{t.occLabel}</div>
         </div>
-        <div style={{ width: 28, height: 28, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", background: "#f5f0e8", color: "#8b7355", fontSize: 16, flexShrink: 0, transform: expanded ? "rotate(180deg)" : "rotate(0)", transition: "transform 0.3s ease" }}>▾</div>
+        <div className="qv-card-chevron" style={{ width: 28, height: 28, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", background: "#f5f0e8", color: "#8b7355", fontSize: 16, flexShrink: 0, transform: expanded ? "rotate(180deg)" : "rotate(0)", transition: "transform 0.3s ease" }}>▾</div>
       </div>
       {expanded && (
-        <div style={{ animation: "fs 0.25s ease" }}>
+        <div style={{ animation: "fs 0.25s ease", overflowX: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <colgroup>
               <col style={{ width: "1%" }} />
@@ -2000,10 +2035,10 @@ const VerbCard = ({ verb, expanded, onToggle, onPractice }: { verb: Verb; expand
             </colgroup>
             <thead>
               <tr style={{ background: "#faf7f2", borderBottom: "2px solid #f0ece4" }}>
-                <th style={{ ...TH_STYLE, textAlign: "right", paddingLeft: 14, fontFamily: bodyFont(lang) }}>{t.hForm}</th>
-                <th style={{ ...TH_STYLE, textAlign: "left", fontFamily: bodyFont(lang) }}>{t.hMn}</th>
-                <th style={{ ...TH_STYLE, textAlign: "left", fontFamily: bodyFont(lang) }}>{t.hTy}</th>
-                <th style={{ ...TH_STYLE, textAlign: "right", paddingRight: 14, fontFamily: bodyFont(lang) }}>{t.hEst}</th>
+                <th className="qv-th" style={{ ...TH_STYLE, textAlign: "right", paddingLeft: 14, fontFamily: bodyFont(lang) }}>{t.hForm}</th>
+                <th className="qv-th" style={{ ...TH_STYLE, textAlign: "left", fontFamily: bodyFont(lang) }}>{t.hMn}</th>
+                <th className="qv-th" style={{ ...TH_STYLE, textAlign: "left", fontFamily: bodyFont(lang) }}>{t.hTy}</th>
+                <th className="qv-th" style={{ ...TH_STYLE, textAlign: "right", paddingRight: 14, fontFamily: bodyFont(lang) }}>{t.hEst}</th>
               </tr>
             </thead>
             <tbody>
@@ -2184,7 +2219,7 @@ export default function QuranicVerbs() {
 
         <header style={{ padding: "28px 20px 26px", textAlign: "center", position: "relative" }}>
           <div style={{ position: "absolute", top: 16, right: 16 }}>
-            <button onClick={() => setLang(l => l === "en" ? "bn" : "en")} style={{
+            <button className="qv-lang-btn" onClick={() => setLang(l => l === "en" ? "bn" : "en")} style={{
               padding: "6px 14px", borderRadius: 99, cursor: "pointer",
               border: "1.5px solid #d4c8b8", background: "#fdfbf7",
               color: "#6b5744", fontSize: 15, fontWeight: 600,
@@ -2204,14 +2239,14 @@ export default function QuranicVerbs() {
             <svg width="11" height="11" viewBox="0 0 24 24" fill="#a67c52" opacity="0.6"><path d="M12 2L9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61z" /></svg>
             <span style={{ fontSize: 12.5, textTransform: "uppercase", color: "#a67c52", fontWeight: 700, fontFamily: bodyFont(lang) }}>{t.sub}</span>
           </div>
-          <h1 style={{ fontFamily: "'Amiri',serif", fontSize: 42.5, color: "#2c1810", fontWeight: 700, lineHeight: 1.2, marginBottom: 5 }}>{t.title}</h1>
-          <p style={{ fontSize: 17.5, color: "#6b5744", fontFamily: bodyFont(lang), fontStyle: lang === "en" ? "italic" : "normal" }}>{t.desc}</p>
+          <h1 className="qv-header-title" style={{ fontFamily: "'Amiri',serif", fontSize: 42.5, color: "#2c1810", fontWeight: 700, lineHeight: 1.2, marginBottom: 5 }}>{t.title}</h1>
+          <p className="qv-header-desc" style={{ fontSize: 17.5, color: "#6b5744", fontFamily: bodyFont(lang), fontStyle: lang === "en" ? "italic" : "normal" }}>{t.desc}</p>
 
-          <div style={{ display: "flex", justifyContent: "center", gap: 20, marginTop: 20, flexWrap: "wrap" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10, marginTop: 20, maxWidth: 420, margin: "20px auto 0" }}>
             {[{ n: fmtNum(12, lang), l: t.verbs }, { n: fmtNum(TOTAL_OCCURRENCES, lang), l: t.occ }, { n: fmtNum(TOTAL_FORMS, lang), l: t.forms }, { n: fmtPct("7%", lang), l: t.ofQuran }].map((stat, i) =>
-              <div key={i} style={{ textAlign: "center", padding: "7px 11px", borderRadius: 10, background: "#ffffff55", border: "1px solid #e8e0d418" }}>
-                <div style={{ fontSize: 24, fontWeight: 800, color: "#a67c52" }}>{stat.n}</div>
-                <div style={{ fontSize: 11, color: "#8b7355", letterSpacing: lang === "bn" ? 0 : 1.2, textTransform: lang === "bn" ? "none" : "uppercase", fontFamily: bodyFont(lang) }}>{stat.l}</div>
+              <div key={i} style={{ textAlign: "center", padding: "7px 4px", borderRadius: 10, background: "#ffffff55", border: "1px solid #e8e0d418" }}>
+                <div className="qv-stat-num" style={{ fontSize: 24, fontWeight: 800, color: "#a67c52" }}>{stat.n}</div>
+                <div className="qv-stat-label" style={{ fontSize: 11, color: "#8b7355", letterSpacing: lang === "bn" ? 0 : 1.2, textTransform: lang === "bn" ? "none" : "uppercase", fontFamily: bodyFont(lang) }}>{stat.l}</div>
               </div>
             )}
           </div>
@@ -2233,7 +2268,7 @@ export default function QuranicVerbs() {
                 strokeWidth="2" strokeLinecap="round" style={{ flexShrink: 0, transition: "stroke 0.3s ease" }}>
                 <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
               </svg>
-              <input type="text" placeholder={t.search} value={search}
+              <input className="qv-search" type="text" placeholder={t.search} value={search}
                 onChange={e => setSearch(e.target.value)}
                 onFocus={() => setSearchFocused(true)}
                 onBlur={() => setSearchFocused(false)}
