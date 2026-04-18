@@ -22,6 +22,7 @@ export function QuizView(props: QuizViewProps) {
     acc,
     accent,
     last,
+    retake,
     cStats,
     am,
   } = props;
@@ -150,7 +151,7 @@ export function QuizView(props: QuizViewProps) {
           accent={accent}
           fl={fl}
           ans={ans}
-          onRetake={(scope, ids) => d({ type: T.RETAKE, scope, ids })}
+          onRetake={(scope, ids) => retake(scope, ids)}
           onSetCat={(c) => d({ type: T.SET_CAT, cat: c })}
           onNavTo={(idx) => d({ type: T.NAV, d: idx })}
         />

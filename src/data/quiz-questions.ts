@@ -1,5 +1,5 @@
-import type { Question } from "@/schemas/quiz";
-import { VOCAB, getMeaning, getPronunciation } from "./vocabulary";
+import type { Question, Vocab } from "@/schemas/quiz";
+import { getMeaning, getPronunciation } from "./vocabulary";
 import * as m from "#/paraglide/messages";
 
 /** Fisher-Yates shuffle */
@@ -17,10 +17,10 @@ function pick<T>(a: T[], x: T, n = 3): T[] {
   return shuffle(a.filter((v) => v !== x)).slice(0, n);
 }
 
-export function makeQuestions(): Question[] {
+export function makeQuestions(vocab: Vocab[]): Question[] {
   const q: Question[] = [];
 
-  VOCAB.forEach((v) => {
+  vocab.forEach((v) => {
     const meaning = getMeaning(v);
     const mascLabel = m.masculine_ar();
     const femLabel = m.feminine_ar();
@@ -29,14 +29,14 @@ export function makeQuestions(): Question[] {
       id: `a2e-${v.ar}`,
       q: m.q_what_does_mean({ word: v.ar }),
       a: meaning,
-      opts: shuffle([meaning, ...pick(VOCAB, v).map(getMeaning)]),
+      opts: shuffle([meaning, ...pick(vocab, v).map(getMeaning)]),
       cat: "Vocab",
     });
     q.push({
       id: `e2a-${v.key}`,
       q: m.q_what_in_arabic({ word: meaning }),
       a: v.ar,
-      opts: shuffle([v.ar, ...pick(VOCAB, v).map((w) => w.ar)]),
+      opts: shuffle([v.ar, ...pick(vocab, v).map((w) => w.ar)]),
       cat: "Vocab",
     });
     q.push({
@@ -58,7 +58,7 @@ export function makeQuestions(): Question[] {
       id: `p-${v.ar}`,
       q: m.q_pronunciation({ word: v.ar }),
       a: pr,
-      opts: shuffle([pr, ...pick(VOCAB, v).map(getPronunciation)]),
+      opts: shuffle([pr, ...pick(vocab, v).map(getPronunciation)]),
       cat: "Pronun.",
     });
   });

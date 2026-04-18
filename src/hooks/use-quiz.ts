@@ -6,7 +6,7 @@ import {
   useCallback,
   useState,
 } from "react";
-import type { QuizState, Category, ThemeMode } from "@/schemas/quiz";
+import type { QuizState, Category, ThemeMode, Vocab } from "@/schemas/quiz";
 import { ACCENT_LIGHT, ACCENT_DARK } from "@/data/constants";
 import { shuffle, makeQuestions } from "@/data/quiz-questions";
 
@@ -31,20 +31,20 @@ type Action =
   | { type: typeof T.CONFIRM }
   | { type: typeof T.NAV; d: number }
   | { type: typeof T.RESULTS }
-  | { type: typeof T.RETAKE; scope: "all" | "cat"; ids: string[] }
+  | { type: typeof T.RETAKE; scope: "all" | "cat"; ids: string[]; vocab: Vocab[] }
   | { type: typeof T.SAVE }
   | { type: typeof T.LOAD; ans: Record<string, boolean> }
-  | { type: typeof T.RESET }
+  | { type: typeof T.RESET; vocab: Vocab[] }
   | { type: typeof T.MENU }
   | { type: typeof T.THEME; v: ThemeMode };
 
-const init = (): QuizState => ({
+const init = (vocab: Vocab[]): QuizState => ({
   cat: "All",
   ans: {},
   sel: null,
   lk: false,
   i: 0,
-  qs: shuffle(makeQuestions()),
+  qs: shuffle(makeQuestions(vocab)),
   done: false,
   save: false,
   menu: false,
@@ -94,7 +94,7 @@ function reducer(s: QuizState, a: Action): QuizState {
       return {
         ...s,
         ans,
-        qs: shuffle(makeQuestions()),
+        qs: shuffle(makeQuestions(a.vocab)),
         sel: null,
         lk: false,
         i: 0,
@@ -107,7 +107,7 @@ function reducer(s: QuizState, a: Action): QuizState {
     case T.LOAD:
       return { ...s, ans: a.ans };
     case T.RESET:
-      return { ...init(), save: s.save, theme: s.theme, k: s.k + 1 };
+      return { ...init(a.vocab), save: s.save, theme: s.theme, k: s.k + 1 };
     case T.MENU:
       return { ...s, menu: !s.menu };
     case T.THEME:
@@ -118,8 +118,8 @@ function reducer(s: QuizState, a: Action): QuizState {
 }
 
 // ── Hook ──
-export function useQuiz() {
-  const [s, d] = useReducer(reducer, null, init);
+export function useQuiz(vocab: Vocab[]) {
+  const [s, d] = useReducer(reducer, vocab, init);
   const mr = useRef<HTMLDivElement>(null);
   const { cat, ans, qs, i, done, save, menu, theme } = s;
 
@@ -227,13 +227,20 @@ export function useQuiz() {
   }, [menu]);
 
   const reset = useCallback(() => {
-    d({ type: T.RESET });
+    d({ type: T.RESET, vocab });
     if (save) {
       try {
         localStorage.removeItem("aq-a");
       } catch {}
     }
-  }, [save]);
+  }, [save, vocab]);
+
+  const retake = useCallback(
+    (scope: "all" | "cat", ids: string[]) => {
+      d({ type: T.RETAKE, scope, ids, vocab });
+    },
+    [vocab],
+  );
 
   const cStats = useCallback(
     (c: Category) => {
@@ -267,6 +274,7 @@ export function useQuiz() {
     resolved,
     mr,
     reset,
+    retake,
     cStats,
     nextTheme,
     am,

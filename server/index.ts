@@ -25,10 +25,16 @@ const VocabUpdateSchema = VocabCreateSchema.partial();
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
+const CORS_HEADERS = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
 function json(data: unknown, status = 200) {
     return new Response(JSON.stringify(data), {
         status,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...CORS_HEADERS },
     });
 }
 
@@ -56,6 +62,10 @@ Bun.serve({
     port: 3001,
     async fetch(req) {
         const url = new URL(req.url);
+
+        if (req.method === 'OPTIONS') {
+            return new Response(null, { status: 204, headers: CORS_HEADERS });
+        }
 
         // ── Admin dashboard ────────────────────────────────────────────────
 

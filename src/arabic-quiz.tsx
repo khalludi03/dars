@@ -7,11 +7,11 @@ import { Menu } from "@/components/menu";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { LearnView } from "@/components/learn/learn-view";
 import { QuizView } from "@/components/quiz/quiz-view";
-import type { ViewMode } from "@/schemas/quiz";
+import type { ViewMode, Vocab } from "@/schemas/quiz";
 import * as m from "#/paraglide/messages";
 
-export default function App() {
-  const q = useQuiz();
+export default function App({ vocab }: { vocab: Vocab[] }) {
+  const q = useQuiz(vocab);
   const { s, d, T, mr, reset, nextTheme } = q;
   const { save, menu, theme } = s;
   const accent = q.accent;
