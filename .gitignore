@@ -12,6 +12,11 @@ dist-ssr
 __unconfig*
 todos.json
 
+# SQLite
+*.db
+*.db-shm
+*.db-wal
+
 # Generated
 src/paraglide
 src/routeTree.gen.ts
