@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DARS Admin</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+    header { background: #1e293b; padding: 1rem 2rem; display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid #334155; }
+    header h1 { font-size: 1.25rem; }
+    #user-info { margin-left: auto; font-size: 0.875rem; color: #94a3b8; }
+    #logout-btn { background: #ef4444; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.875rem; }
+    main { max-width: 960px; margin: 2rem auto; padding: 0 1rem; }
+    #login-panel { max-width: 360px; margin: 4rem auto; background: #1e293b; padding: 2rem; border-radius: 12px; }
+    #login-panel h2 { margin-bottom: 1.5rem; }
+    .field { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+    label { font-size: 0.875rem; color: #94a3b8; }
+    input, select { background: #0f172a; border: 1px solid #334155; color: #e2e8f0; padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.875rem; width: 100%; }
+    .btn { background: #6366f1; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.875rem; }
+    .btn:hover { background: #4f46e5; }
+    .btn-danger { background: #dc2626; }
+    .btn-danger:hover { background: #b91c1c; }
+    .btn-sm { padding: 0.3rem 0.6rem; font-size: 0.75rem; }
+    .error { color: #f87171; font-size: 0.875rem; margin-top: 0.5rem; }
+    section { margin-bottom: 2.5rem; }
+    section h2 { font-size: 1rem; margin-bottom: 1rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; }
+    table { width: 100%; border-collapse: collapse; background: #1e293b; border-radius: 8px; overflow: hidden; }
+    th { text-align: left; padding: 0.75rem 1rem; font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; background: #0f172a; }
+    td { padding: 0.75rem 1rem; font-size: 0.875rem; border-top: 1px solid #334155; }
+    .arabic { font-size: 1.2rem; direction: rtl; }
+    .tag { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600; }
+    .tag-M { background: #1e3a5f; color: #93c5fd; }
+    .tag-F { background: #4a1942; color: #f9a8d4; }
+    .form-row { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: flex-end; background: #1e293b; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
+    .form-row .field { margin-bottom: 0; flex: 1; min-width: 120px; }
+    #dashboard { display: none; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🕌 DARS Admin</h1>
+  <span id="user-info"></span>
+  <button id="logout-btn" style="display:none" onclick="logout()">Logout</button>
+</header>
+
+<main>
+  <!-- Login -->
+  <div id="login-panel">
+    <h2>Sign in</h2>
+    <div class="field">
+      <label>Username</label>
+      <input id="l-username" type="text" autocomplete="username" />
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input id="l-password" type="password" autocomplete="current-password" />
+    </div>
+    <button class="btn" onclick="doLogin()">Login</button>
+    <p class="error" id="login-error"></p>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dashboard">
+    <section>
+      <h2>Vocabulary</h2>
+
+      <!-- Add form -->
+      <div class="form-row" id="vocab-form">
+        <div class="field"><label>Key</label><input id="v-key" placeholder="e.g. neck" /></div>
+        <div class="field"><label>Arabic</label><input id="v-arabic" placeholder="e.g. رَقَبَةٌ" /></div>
+        <div class="field" style="max-width:90px"><label>Gender</label>
+          <select id="v-gender"><option value="M">M</option><option value="F">F</option></select>
+        </div>
+        <div class="field" style="max-width:120px"><label>Section</label>
+          <select id="v-section">
+            <option>Head</option><option>Upper</option><option>Core</option><option>Lower</option>
+          </select>
+        </div>
+        <div class="field"><label>Ref word</label><input id="v-refword" /></div>
+        <div class="field"><label>Ref roman</label><input id="v-refroman" /></div>
+        <div class="field" style="flex:0">
+          <label>&nbsp;</label>
+          <button class="btn" onclick="addVocab()">Add</button>
+        </div>
+      </div>
+      <p class="error" id="vocab-error"></p>
+
+      <table id="vocab-table">
+        <thead>
+          <tr><th>Key</th><th>Arabic</th><th>Gender</th><th>Section</th><th>Ref</th><th></th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </div>
+</main>
+
+<script>
+  const API = 'http://localhost:3001';
+  let token = localStorage.getItem('dars_admin_token');
+
+  async function api(path, opts = {}) {
+    const res = await fetch(API + path, {
+      headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: 'Bearer ' + token } : {}) },
+      ...opts,
+    });
+    if (res.status === 204) return null;
+    return res.json();
+  }
+
+  async function doLogin() {
+    const username = document.getElementById('l-username').value.trim();
+    const password = document.getElementById('l-password').value;
+    const data = await api('/api/auth/login', { method: 'POST', body: JSON.stringify({ username, password }) });
+    if (data.error) {
+      document.getElementById('login-error').textContent = typeof data.error === 'string' ? data.error : JSON.stringify(data.error);
+      return;
+    }
+    token = data.token;
+    localStorage.setItem('dars_admin_token', token);
+    await initDashboard();
+  }
+
+  async function logout() {
+    await api('/api/auth/logout', { method: 'POST' });
+    token = null;
+    localStorage.removeItem('dars_admin_token');
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('login-panel').style.display = '';
+    document.getElementById('logout-btn').style.display = 'none';
+    document.getElementById('user-info').textContent = '';
+  }
+
+  async function initDashboard() {
+    const me = await api('/api/auth/me');
+    if (!me || me.error) { token = null; return; }
+    if (me.role !== 'admin') {
+      document.getElementById('login-error').textContent = 'Admin access only.';
+      return;
+    }
+    document.getElementById('login-panel').style.display = 'none';
+    document.getElementById('dashboard').style.display = '';
+    document.getElementById('user-info').textContent = me.username + ' (' + me.role + ')';
+    document.getElementById('logout-btn').style.display = '';
+    await loadVocab();
+  }
+
+  async function loadVocab() {
+    const rows = await api('/api/vocabulary');
+    const tbody = document.querySelector('#vocab-table tbody');
+    tbody.innerHTML = rows.map(v => `
+      <tr>
+        <td>${v.key}</td>
+        <td class="arabic">${v.arabic}</td>
+        <td><span class="tag tag-${v.gender}">${v.gender}</span></td>
+        <td>${v.section}</td>
+        <td>${v.reference_word} <small style="color:#64748b">${v.reference_roman}</small></td>
+        <td><button class="btn btn-danger btn-sm" onclick="deleteVocab(${v.id})">Delete</button></td>
+      </tr>
+    `).join('');
+  }
+
+  async function addVocab() {
+    const body = {
+      key: document.getElementById('v-key').value.trim(),
+      arabic: document.getElementById('v-arabic').value.trim(),
+      gender: document.getElementById('v-gender').value,
+      section: document.getElementById('v-section').value,
+      reference_word: document.getElementById('v-refword').value.trim(),
+      reference_roman: document.getElementById('v-refroman').value.trim(),
+    };
+    const data = await api('/api/vocabulary', { method: 'POST', body: JSON.stringify(body) });
+    if (data?.error) {
+      document.getElementById('vocab-error').textContent = JSON.stringify(data.error);
+      return;
+    }
+    document.getElementById('vocab-error').textContent = '';
+    ['v-key','v-arabic','v-refword','v-refroman'].forEach(id => document.getElementById(id).value = '');
+    await loadVocab();
+  }
+
+  async function deleteVocab(id) {
+    if (!confirm('Delete vocab #' + id + '?')) return;
+    await api('/api/vocabulary/' + id, { method: 'DELETE' });
+    await loadVocab();
+  }
+
+  // Auto-restore session on load
+  if (token) initDashboard();
+</script>
+</body>
+</html>
